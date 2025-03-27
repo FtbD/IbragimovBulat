@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 20px;
 }
-wqewe{}
+
 
 .container {
     max-width: 100%;
@@ -31,7 +31,13 @@ h1 {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-left: 2px solid #ddd;
+    border-right: 2px solid #ddd;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
+
+
 
 .section-title {
     font-size: 1.5em;
@@ -53,7 +59,7 @@ input {
 
 button {
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: #47985a;
     color: white;
     border: none;
     border-radius: 4px;
@@ -76,3 +82,26 @@ li {
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
+.clear-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #c4636d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.clear-btn:hover {
+    background-color: #c82333;
+}
+
+.tasks-container {
+    display: flex;
+    gap: 10px; 
+  }
+  

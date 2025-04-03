@@ -105,3 +105,9 @@ li {
     gap: 10px; 
   }
   
+.taskboard {
+    display: flex;
+    gap: 20px;            
+    padding: 20px;
+   
+}

@@ -19,7 +19,6 @@ export default class HeaderComponent {
         if (!this.element) {
             this.element = createElement(this.getTemplate());
         }
-        console.log(`Создан элемент:`, this.element);
         return this.element;
     }
 

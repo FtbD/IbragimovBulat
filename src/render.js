@@ -12,7 +12,6 @@ function createElement(template) {
 }
 
 function render(component, container, place = RenderPosition.BEFOREEND) {
-    console.log(`Рендерим компонент в `, container);
     container.insertAdjacentElement(place, component.getElement());
     const element = component.getElement();
     

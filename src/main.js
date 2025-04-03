@@ -8,16 +8,8 @@ import { render, RenderPosition } from './render.js';
 document.addEventListener("DOMContentLoaded", () => {
     const bodyContainer = document.querySelector('.board-app');
     const mainContainer = document.querySelector(".board-app__main");
-    console.log("Проверяем контейнеры...");
-    console.log("bodyContainer:", document.querySelector('.board-app'));
-    console.log("mainContainer:", document.querySelector('.board-app__main'));
-    console.log("addTaskContainer:", document.querySelector(".add-task"));
-    console.log("taskboardContainer:", document.querySelector(".taskboard"));
 
-    if (!bodyContainer || !mainContainer) {
-        console.error("Ошибка: контейнеры .board-app или .board-app__main не найдены!");
-        return;
-    }
+
 
     render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
 
@@ -25,11 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
     render(boardContainer, mainContainer);
 
     const addTaskContainer = document.querySelector(".add-task");
-    if (addTaskContainer) {
-        render(new TaskFormComponent(), addTaskContainer);
-    } else {
-        console.warn("Предупреждение: контейнер .add-task не найден!");
-    }
+    render(new TaskFormComponent(), addTaskContainer);
+
 
     const taskSets = [
         ["Купить хлеб", "Сделать зарядку", "Помыть машину"],

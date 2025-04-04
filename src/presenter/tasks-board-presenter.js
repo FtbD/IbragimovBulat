@@ -1,27 +1,42 @@
-javascript
-import TasksListComponent from '../view/tasks-list-component.js';
+import { render } from '../render.js';
+import TaskListComponent from '../view/task-list-component.js';
 import TaskComponent from '../view/task-component.js';
-import TaskBoardComponent from '../view/tasks-board-component.js';
-import { render } from '../framework/render.js';
+import ClearButtonComponent from '../view/clear-button-component.js';
+import { StatusTitles } from '../const.js';
 
 export default class TasksBoardPresenter {
-    tasksBoardComponent = new TaskBoardComponent();
-    taskListComponent = new TasksListComponent();
+  constructor({ boardContainer, tasksModel }) {
+    this.boardContainer = boardContainer;
+    this.tasksModel = tasksModel;
+  }
 
-    constructor({ boardContainer }) {
-        this.boardContainer = boardContainer;
-    }
+  init() {
+    const tasks = this.tasksModel.getTasks();
+    const statusGroups = {
+      pending: tasks.filter(task => task.status === 'pending'),
+      'in-progress': tasks.filter(task => task.status === 'in-progress'),
+      done: tasks.filter(task => task.status === 'done')
+    };
 
-    init() {
-        render(this.tasksBoardComponent, this.boardContainer);
-        for (let i = 0; i < 4; i++) {
-            const tasksListComponent = new TasksListComponent();
-            render(tasksListComponent, this.tasksBoardComponent.getElement());
+    Object.entries(statusGroups).forEach(([status, tasks]) => {
+      const section = document.createElement('section');
+      section.className = 'section';
+      section.innerHTML = `<h3 class="section-title">${StatusTitles[status]}</h3>`;
+      
+      const taskListComponent = new TaskListComponent();
+      section.appendChild(taskListComponent.getElement());
+      
+      tasks.forEach(task => {
+        const taskComponent = new TaskComponent(task);
+        render(taskComponent, taskListComponent.getElement());
+      });
 
-            for (let j = 0; j < 4; j++) {
-                const taskComponent = new TaskComponent();
-                render(taskComponent, tasksListComponent.getElement());
-            }
-        }
-    }
+      if (status === 'done') {
+        const clearButton = new ClearButtonComponent();
+        section.appendChild(clearButton.getElement());
+      }
+
+      this.boardContainer.appendChild(section);
+    });
+  }
 }

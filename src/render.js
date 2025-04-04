@@ -3,32 +3,16 @@ const RenderPosition = {
     AFTERBEGIN: 'afterbegin',
     BEFOREEND: 'beforeend',
     AFTEREND: 'afterend',
-};
-
-function createElement(template) {
+  };
+  
+  function createElement(template) {
     const newElement = document.createElement('div');
     newElement.innerHTML = template;
     return newElement.firstElementChild;
-}
-
-function render(component, container, place = RenderPosition.BEFOREEND) {
+  }
+  
+  function render(component, container, place = RenderPosition.BEFOREEND) {
     container.insertAdjacentElement(place, component.getElement());
-    const element = component.getElement();
-    
-    switch (place) {
-        case RenderPosition.BEFOREBEGIN:
-            container.parentNode.insertBefore(element, container);
-            break;
-        case RenderPosition.AFTERBEGIN:
-            container.prepend(element);
-            break;
-        case RenderPosition.BEFOREEND:
-            container.append(element);
-            break;
-        case RenderPosition.AFTEREND:
-            container.parentNode.insertBefore(element, container.nextSibling);
-            break;
-    }
-}
-
-export { RenderPosition, createElement, render };
+  }
+  
+  export { RenderPosition, createElement, render };

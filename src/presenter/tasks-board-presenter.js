@@ -10,41 +10,66 @@ export default class TasksBoardPresenter {
   #tasksModel = null;
 
   #boardComponent = null;
-  #taskListComponent = null;
+  #taskListPending = null;
+  #taskListDone = null;
   #clearButtonComponent = null;
   #emptyComponent = null;
 
   constructor({ boardContainer, tasksModel }) {
     this.#boardContainer = boardContainer;
     this.#tasksModel = tasksModel;
+
+    this.#tasksModel.addObserver(() => this.#handleModelUpdate());
   }
 
   init() {
     this.#boardComponent = new BoardComponent();
     render(this.#boardComponent, this.#boardContainer);
-
     this.#renderBoard();
   }
 
   #renderBoard() {
+    this.#boardComponent.element.innerHTML = '';
+
     if (this.#tasksModel.tasks.length === 0) {
       this.#renderEmptyList();
     } else {
-      this.#renderTaskList();
+      this.#renderTaskLists();
       this.#renderClearButton();
     }
   }
 
-  #renderTaskList() {
-    this.#taskListComponent = new TaskListComponent();
-    render(this.#taskListComponent, this.#boardComponent.element);
+  #renderTaskLists() {
+    this.#taskListPending = new TaskListComponent();
+    this.#taskListDone = new TaskListComponent();
+
+    const pendingTitle = document.createElement('h3');
+    pendingTitle.textContent = 'В процессе';
+
+    const doneTitle = document.createElement('h3');
+    doneTitle.textContent = 'Выполнено';
+
+    this.#boardComponent.element.appendChild(pendingTitle);
+    this.#boardComponent.element.appendChild(this.#taskListPending.element);
+
+    this.#boardComponent.element.appendChild(doneTitle);
+    this.#boardComponent.element.appendChild(this.#taskListDone.element);
 
     this.#tasksModel.tasks.forEach((task) => this.#renderTask(task));
   }
 
   #renderTask(task) {
     const taskComponent = new TaskComponent({ task });
-    render(taskComponent, this.#taskListComponent.element);
+    const targetList = task.status === 'done'
+      ? this.#taskListDone.element
+      : this.#taskListPending.element;
+
+    // ✅ При клике задача становится выполненной
+    taskComponent.element.addEventListener('click', () => {
+      this.#tasksModel.setTaskDone(task.id);
+    });
+
+    render(taskComponent, targetList);
   }
 
   #renderEmptyList() {
@@ -53,11 +78,22 @@ export default class TasksBoardPresenter {
   }
 
   #renderClearButton() {
-    this.#clearButtonComponent = new ClearButtonComponent(() => this.#clearDoneTasks());
+    const hasDoneTasks = this.#tasksModel.tasks.some(task => task.status === 'done');
+    this.#clearButtonComponent = new ClearButtonComponent(() => this.#handleClearDoneTasks());
+
+    const element = this.#clearButtonComponent.element;
+    if (!hasDoneTasks) {
+      element.disabled = true;
+    }
+
     render(this.#clearButtonComponent, this.#boardComponent.element);
   }
 
-  #clearDoneTasks() {
-    console.log('Clear done tasks clicked');
+  #handleClearDoneTasks() {
+    this.#tasksModel.clearDoneTasks();
+  }
+
+  #handleModelUpdate() {
+    this.#renderBoard();
   }
 }

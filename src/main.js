@@ -15,6 +15,19 @@ const tasksBoardPresenter = new TasksBoardPresenter({
 });
 
 render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);
-render(new FormAddTaskComponent(), formContainer);
+
+const addForm = new FormAddTaskComponent();
+render(addForm, formContainer);
+
+addForm.element.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const input = addForm.element.querySelector('input[name="title"]');
+  const title = input.value.trim();
+
+  if (title) {
+    tasksModel.addTask(title);
+    input.value = '';
+  }
+});
 
 tasksBoardPresenter.init();

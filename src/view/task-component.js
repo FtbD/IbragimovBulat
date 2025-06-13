@@ -1,7 +1,7 @@
-import { AbstractComponent } from "./abstract-component.js";
+import { AbstractComponent } from './abstract-component.js';
 
 export default class TaskComponent extends AbstractComponent {
-  #task;
+  #task = null;
 
   constructor({ task }) {
     super();
@@ -9,6 +9,15 @@ export default class TaskComponent extends AbstractComponent {
   }
 
   get template() {
-    return `<div class="task">${this.#task.title}</div>`;
+    return `<li class="task ${this.#task.status}" draggable="true" data-id="${this.#task.id}">
+      ${this.#task.title}
+    </li>`;
+  }
+
+  setDragStartHandler(callback) {
+    this.element.addEventListener('dragstart', (evt) => {
+      evt.dataTransfer.setData('text/plain', this.#task.id);
+      callback?.(this.#task);
+    });
   }
 }

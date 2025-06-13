@@ -28,6 +28,14 @@ export default class TaskModel {
     this.#notify();
   }
 
+  setTaskStatus(id, status) {
+    const task = this.#boardTasks.find(task => task.id == id);
+    if (task && task.status !== status) {
+      task.status = status;
+      this.#notify();
+    }
+  }
+
   addObserver(observer) {
     this.#observers.push(observer);
   }
@@ -35,21 +43,4 @@ export default class TaskModel {
   #notify() {
     this.#observers.forEach(observer => observer());
   }
-
-  setTaskDone(id) {
-  const task = this.#boardTasks.find(task => task.id === id);
-  if (task) {
-    task.status = 'done';
-    this.#notify();
-  }
-}
-setTaskDone(id) {
-  const task = this.#boardTasks.find(task => task.id === id);
-  if (task && task.status !== 'done') {
-    task.status = 'done';
-    this.#notify();
-  }
-}
-
-
 }

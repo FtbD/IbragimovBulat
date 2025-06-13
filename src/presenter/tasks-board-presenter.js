@@ -45,7 +45,6 @@ export default class TasksBoardPresenter {
 
     const pendingTitle = document.createElement('h3');
     pendingTitle.textContent = 'В процессе';
-
     const doneTitle = document.createElement('h3');
     doneTitle.textContent = 'Выполнено';
 
@@ -54,6 +53,15 @@ export default class TasksBoardPresenter {
 
     this.#boardComponent.element.appendChild(doneTitle);
     this.#boardComponent.element.appendChild(this.#taskListDone.element);
+
+    // 🟢 Обработчики Drop
+    this.#taskListPending.setDropHandler((id) => {
+      this.#tasksModel.setTaskStatus(id, 'pending');
+    });
+
+    this.#taskListDone.setDropHandler((id) => {
+      this.#tasksModel.setTaskStatus(id, 'done');
+    });
 
     this.#tasksModel.tasks.forEach((task) => this.#renderTask(task));
   }
@@ -64,10 +72,8 @@ export default class TasksBoardPresenter {
       ? this.#taskListDone.element
       : this.#taskListPending.element;
 
-    // ✅ При клике задача становится выполненной
-    taskComponent.element.addEventListener('click', () => {
-      this.#tasksModel.setTaskDone(task.id);
-    });
+    // ✳️ Drag support
+    taskComponent.setDragStartHandler(() => {});
 
     render(taskComponent, targetList);
   }

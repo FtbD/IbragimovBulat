@@ -112,3 +112,10 @@ body {
   background-color: #f0f8ff;
   transition: background-color 0.2s ease;
 }
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  margin: 20px;
+}

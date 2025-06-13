@@ -22,3 +22,16 @@ export const StatusColors = {
   [TaskStatus.IN_PROGRESS]: '#17a2b8',
   [TaskStatus.DONE]: '#28a745',
 };
+
+export const UserAction = {
+  UPDATE_TASK: 'UPDATE_TASK',
+  ADD_TASK: 'ADD_TASK',
+  DELETE_TASK: 'DELETE_TASK'
+};
+
+export const UpdateType = {
+  INIT: 'INIT',
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};

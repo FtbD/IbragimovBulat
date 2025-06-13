@@ -22,11 +22,14 @@ export default class TasksBoardPresenter {
     this.#tasksModel.addObserver(() => this.#handleModelUpdate());
   }
 
-  init() {
-    this.#boardComponent = new BoardComponent();
-    render(this.#boardComponent, this.#boardContainer);
-    this.#renderBoard();
-  }
+init() {
+  this.#boardComponent = new BoardComponent();
+
+  render(this.#boardComponent, this.#boardContainer);
+
+  this.#renderBoard();
+}
+
 
   #renderBoard() {
     this.#boardComponent.element.innerHTML = '';
@@ -54,7 +57,6 @@ export default class TasksBoardPresenter {
     this.#boardComponent.element.appendChild(doneTitle);
     this.#boardComponent.element.appendChild(this.#taskListDone.element);
 
-    // 🟢 Обработчики Drop
     this.#taskListPending.setDropHandler((id) => {
       this.#tasksModel.setTaskStatus(id, 'pending');
     });
@@ -72,7 +74,6 @@ export default class TasksBoardPresenter {
       ? this.#taskListDone.element
       : this.#taskListPending.element;
 
-    // ✳️ Drag support
     taskComponent.setDragStartHandler(() => {});
 
     render(taskComponent, targetList);

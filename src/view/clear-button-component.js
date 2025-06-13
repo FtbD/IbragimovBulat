@@ -1,36 +1,35 @@
-import { createElement } from '../render.js';
-import { TaskStatus } from '../const.js';
+import { AbstractComponent } from "./abstract-component.js";
+import { createElement } from "../render.js";
+import { TaskStatus } from "../const.js";
 
-function createClearButtonTemplate() {
-  return `
-    <button class="clear-btn" data-status="${TaskStatus.DONE}">
-      <span class="clear-btn__icon">🗑️</span>
-      <span class="clear-btn__text">Очистить выполненные</span>
-    </button>
-  `;
-}
-export default class ClearButtonComponent {
+export default class ClearButtonComponent extends AbstractComponent {
+  #onClick = null;
+
   constructor(onClick) {
-    this.onClick = onClick;
-    this.element = null;
+    super();
+    this.#onClick = onClick;
+    this._handleClick = this._handleClick.bind(this);
   }
 
-  getTemplate() {
-    return createClearButtonTemplate();
+  get template() {
+    return `
+      <button class="clear-btn" data-status="${TaskStatus.DONE}">
+        <span class="clear-btn__icon">🗑️</span>
+        <span class="clear-btn__text">Очистить выполненные</span>
+      </button>
+    `;
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-      this.element.addEventListener('click', this.onClick);
+  get element() {
+    if (!this._element) {
+      this._element = createElement(this.template);
+      this._element.addEventListener("click", this._handleClick);
     }
-    return this.element;
+    return this._element;
   }
 
-  removeElement() {
-    if (this.element) {
-      this.element.removeEventListener('click', this.onClick);
-      this.element = null;
-    }
+  _handleClick(evt) {
+    evt.preventDefault();
+    this.#onClick();
   }
 }

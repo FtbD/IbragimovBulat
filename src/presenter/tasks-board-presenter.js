@@ -1,42 +1,63 @@
-import { render } from '../render.js';
 import TaskListComponent from '../view/task-list-component.js';
 import TaskComponent from '../view/task-component.js';
+import EmptyComponent from '../view/empty-component.js';
 import ClearButtonComponent from '../view/clear-button-component.js';
-import { StatusTitles } from '../const.js';
+import BoardComponent from '../view/board-component.js';
+import { render } from '../render.js';
 
 export default class TasksBoardPresenter {
+  #boardContainer = null;
+  #tasksModel = null;
+
+  #boardComponent = null;
+  #taskListComponent = null;
+  #clearButtonComponent = null;
+  #emptyComponent = null;
+
   constructor({ boardContainer, tasksModel }) {
-    this.boardContainer = boardContainer;
-    this.tasksModel = tasksModel;
+    this.#boardContainer = boardContainer;
+    this.#tasksModel = tasksModel;
   }
 
   init() {
-    const tasks = this.tasksModel.getTasks();
-    const statusGroups = {
-      pending: tasks.filter(task => task.status === 'pending'),
-      'in-progress': tasks.filter(task => task.status === 'in-progress'),
-      done: tasks.filter(task => task.status === 'done')
-    };
+    this.#boardComponent = new BoardComponent();
+    render(this.#boardComponent, this.#boardContainer);
 
-    Object.entries(statusGroups).forEach(([status, tasks]) => {
-      const section = document.createElement('section');
-      section.className = 'section';
-      section.innerHTML = `<h3 class="section-title">${StatusTitles[status]}</h3>`;
-      
-      const taskListComponent = new TaskListComponent();
-      section.appendChild(taskListComponent.getElement());
-      
-      tasks.forEach(task => {
-        const taskComponent = new TaskComponent(task);
-        render(taskComponent, taskListComponent.getElement());
-      });
+    this.#renderBoard();
+  }
 
-      if (status === 'done') {
-        const clearButton = new ClearButtonComponent();
-        section.appendChild(clearButton.getElement());
-      }
+  #renderBoard() {
+    if (this.#tasksModel.tasks.length === 0) {
+      this.#renderEmptyList();
+    } else {
+      this.#renderTaskList();
+      this.#renderClearButton();
+    }
+  }
 
-      this.boardContainer.appendChild(section);
-    });
+  #renderTaskList() {
+    this.#taskListComponent = new TaskListComponent();
+    render(this.#taskListComponent, this.#boardComponent.element);
+
+    this.#tasksModel.tasks.forEach((task) => this.#renderTask(task));
+  }
+
+  #renderTask(task) {
+    const taskComponent = new TaskComponent({ task });
+    render(taskComponent, this.#taskListComponent.element);
+  }
+
+  #renderEmptyList() {
+    this.#emptyComponent = new EmptyComponent();
+    render(this.#emptyComponent, this.#boardComponent.element);
+  }
+
+  #renderClearButton() {
+    this.#clearButtonComponent = new ClearButtonComponent(() => this.#clearDoneTasks());
+    render(this.#clearButtonComponent, this.#boardComponent.element);
+  }
+
+  #clearDoneTasks() {
+    console.log('Clear done tasks clicked');
   }
 }

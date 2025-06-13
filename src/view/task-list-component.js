@@ -1,22 +1,7 @@
-import { createElement } from '../render.js';
+import { AbstractComponent } from "./abstract-component.js";
 
-function createTaskListTemplate() {
-    return `<ul class="task-list"></ul>`;
-}
-
-export default class TaskListComponent {
-    getTemplate() {
-        return createTaskListTemplate();
-    }
-
-    getElement() {
-        if (!this.element) {
-            this.element = createElement(this.getTemplate());
-        }
-        return this.element;
-    }
-
-    removeElement() {
-        this.element = null;
-    }
+export default class TasksListComponent extends AbstractComponent {
+  get template() {
+    return `<section class="tasks-list"></section>`;
+  }
 }

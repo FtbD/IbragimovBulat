@@ -1,9 +1,11 @@
-import { tasks } from '../mock/task.js';
+export default class TaskModel {
+  #boardTasks = [
+    { id: 1, title: 'Купить хлеб', status: 'pending' },
+    { id: 2, title: 'Позвонить клиенту', status: 'in-progress' },
+    { id: 3, title: 'Написать код', status: 'done' },
+  ];
 
-export default class TasksModel {
-  #boardtasks = tasks;
-
-  getTasks() {
-    return this.#boardtasks;
+  get tasks() {
+    return this.#boardTasks;
   }
 }

@@ -2,7 +2,6 @@ import Observable from '../observable.js';
 import { generateID } from '../utils.js';
 import { UserAction, UpdateType } from '../const.js';
 
-
 export default class TaskModel extends Observable {
   #tasksApiService = null;
   #boardTasks = [];
@@ -31,7 +30,7 @@ export default class TaskModel extends Observable {
   async addTask(title) {
     const newTask = {
       title,
-      status: 'pending',
+      status: 'backlog',
       id: generateID()
     };
     try {
@@ -58,10 +57,11 @@ export default class TaskModel extends Observable {
     }
   }
 
-  async clearDoneTasks() {
-    const doneTasks = this.#boardTasks.filter(t => t.status === 'done');
 
-    for (const task of doneTasks) {
+  async clearDoneTasks() {
+    const trashTasks = this.#boardTasks.filter(t => t.status === 'trash');
+
+    for (const task of trashTasks) {
       try {
         await this.#tasksApiService.deleteTask(task.id);
       } catch (err) {
@@ -69,7 +69,8 @@ export default class TaskModel extends Observable {
       }
     }
 
-    this.#boardTasks = this.#boardTasks.filter(t => t.status !== 'done');
+    this.#boardTasks = this.#boardTasks.filter(t => t.status !== 'trash');
     this._notify(UserAction.DELETE_TASK);
   }
+
 }

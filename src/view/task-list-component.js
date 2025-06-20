@@ -1,25 +1,54 @@
-import { AbstractComponent } from './abstract-component.js';
+import { AbstractComponent } from "./abstract-component.js";
 
 export default class TaskListComponent extends AbstractComponent {
-  get template() {
-    return `<ul class="task-list"></ul>`;
+  #element = null;
+  #dropHandler = null;
+
+  constructor(title) {
+    super();
+    this.title = title;
   }
 
-  setDropHandler(onDrop) {
-    this.element.addEventListener('dragover', (evt) => {
-      evt.preventDefault();
-      this.element.classList.add('drop-hover'); // подсветка при наведении
-    });
+  get template() {
+    return `
+      <div class="section">
+        <div class="section-title">${this.title}</div>
+        <ul></ul>
+      </div>
+    `;
+  }
 
-    this.element.addEventListener('dragleave', () => {
-      this.element.classList.remove('drop-hover'); // убрать подсветку
-    });
+  get element() {
+    if (!this.#element) {
+      this.#element = super.element;
+      const ul = this.#element.querySelector('ul');
 
-    this.element.addEventListener('drop', (evt) => {
-      evt.preventDefault();
-      this.element.classList.remove('drop-hover');
-      const id = evt.dataTransfer.getData('text/plain');
-      onDrop(id);
-    });
+      ul.addEventListener('dragover', (evt) => {
+        evt.preventDefault();
+        ul.classList.add('drag-over');
+      });
+
+      ul.addEventListener('dragleave', () => {
+        ul.classList.remove('drag-over');
+      });
+
+      ul.addEventListener('drop', (evt) => {
+        ul.classList.remove('drag-over');
+        const id = evt.dataTransfer.getData('text/plain');
+        if (this.#dropHandler) {
+          this.#dropHandler(id);
+        }
+      });
+    }
+    return this.#element;
+  }
+
+
+  setDropHandler(callback) {
+    this.#dropHandler = callback;
+  }
+
+  get taskContainer() {
+    return this.element.querySelector('ul');
   }
 }

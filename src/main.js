@@ -25,7 +25,8 @@ render(new HeaderComponent(), bodyContainer, RenderPosition.BEFOREBEGIN);
 const addForm = new FormAddTaskComponent();
 render(addForm, formContainer);
 
-addForm.element.addEventListener('submit', async (evt) => {
+const formElement = addForm.element.querySelector('form');
+formElement.addEventListener('submit', async (evt) => {
   evt.preventDefault();
   const input = addForm.element.querySelector('input[name="title"]');
   const title = input.value.trim();

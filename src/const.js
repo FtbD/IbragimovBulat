@@ -6,21 +6,24 @@ export const RenderPosition = {
 };
 
 export const TaskStatus = {
-  PENDING: 'pending',
+  BACKLOG: 'backlog',
   IN_PROGRESS: 'in-progress',
   DONE: 'done',
+  TRASH: 'trash',
 };
 
 export const StatusTitles = {
-  [TaskStatus.PENDING]: 'Ожидает',
-  [TaskStatus.IN_PROGRESS]: 'В работе',
-  [TaskStatus.DONE]: 'Выполнено',
+  [TaskStatus.BACKLOG]: 'Бэклог',
+  [TaskStatus.IN_PROGRESS]: 'В процессе',
+  [TaskStatus.DONE]: 'Готово',
+  [TaskStatus.TRASH]: 'Корзина',
 };
 
 export const StatusColors = {
-  [TaskStatus.PENDING]: '#ffc107',
+  [TaskStatus.BACKLOG]: '#f39c12',
   [TaskStatus.IN_PROGRESS]: '#17a2b8',
   [TaskStatus.DONE]: '#28a745',
+  [TaskStatus.TRASH]: '#e74c3c',
 };
 
 export const UserAction = {
